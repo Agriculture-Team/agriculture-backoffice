@@ -1,0 +1,21 @@
+<div class="sidebar" data-color="azure" data-background-color="white" data-image="/assets/img/sidebar-1.jpg"
+    *ngIf="isAuthenticated">
+    <div class="logo"><a class="simple-text logo-normal">
+            Agriculture
+        </a></div>
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+            <li class="nav-item" *ngIf="isMenuLoading">
+                <div class="menuLoader">
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                </div>                
+            </li>
+            <li class="nav-item " *ngFor="let item of MenuList" [ngClass]="{'active': item.isActive }">
+                <a class="nav-link menuItemCursor" (click)="rotate(item)">
+                    <i class="material-icons">{{item.icon}}</i>
+                    <p>{{item.title}}</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

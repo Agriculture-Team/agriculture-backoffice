@@ -1,0 +1,25 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form">
+      <div class="formVertical">
+        <mat-form-field class="form-element">
+          <input matInput placeholder="E-Posta Adresi" formControlName="Email" autocomplete="off">
+          <mat-error *ngIf="!formGroup.controls['Email'].valid && formGroup.controls['Email'].touched">
+            {{ getErrorEmail() }}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="form-element">
+          <input type="password" matInput placeholder="Şifre" formControlName="Password">
+          <mat-error *ngIf="!formGroup.controls['Password'].valid && formGroup.controls['Password'].touched">
+            {{ getErrorPassword() }}
+          </mat-error>
+        </mat-form-field>
+        <div class="form-element">
+          <button mat-raised-button color="primary" type="submit" class="button"
+            [disabled]="!formGroup.valid">Giriş</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

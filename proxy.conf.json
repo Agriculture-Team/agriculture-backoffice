@@ -1,0 +1,6 @@
+{
+    "/api": {
+      "target": "http://service.mustafakartal.web.tr/",
+      "secure": false
+    }
+  }

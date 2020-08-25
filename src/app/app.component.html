@@ -1,0 +1,54 @@
+<router-outlet *ngIf="!isAuthenticated"></router-outlet>
+<simple-notifications [options]="notification"></simple-notifications>
+<div class="wrapper " *ngIf="isAuthenticated">
+    <block-ui>
+        <app-sidebar></app-sidebar>
+        <div class="main-panel">
+            <app-header></app-header>
+            <mat-progress-bar *ngIf="isPageLoading" mode="indeterminate"></mat-progress-bar>
+            <div [@routeAnimations]="o && o.activatedRouteData && o.activatedRouteData['animation']">
+                <router-outlet #o="outlet"></router-outlet>
+            </div>
+            <app-footer></app-footer>
+        </div>     
+    </block-ui>    
+</div>
+<!--<div class="fixed-plugin" *ngIf="isAuthenticated">
+    <div class="dropdown show-dropdown">
+        <a href="#" data-toggle="dropdown">
+            <i class="fa fa-cog fa-2x"> </i>
+        </a>
+        <ul class="dropdown-menu">
+            <li class="header-title"> Sidebar Renk Seçenekleri</li>
+            <li class="adjustments-line">
+                <a href="javascript:void(0)" class="switch-trigger active-color">
+                    <div class="badge-colors ml-auto mr-auto">
+                        <span class="badge filter badge-purple" data-color="purple"></span>
+                        <span class="badge filter badge-azure active" data-color="azure"></span>
+                        <span class="badge filter badge-green" data-color="green"></span>
+                        <span class="badge filter badge-warning" data-color="orange"></span>
+                        <span class="badge filter badge-danger" data-color="danger"></span>
+                        <span class="badge filter badge-rose" data-color="rose"></span>
+                    </div>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+            <li class="header-title">Sidebar Arka Planları</li>
+            <li class="active">
+                <a class="img-holder switch-trigger" href="javascript:void(0)">
+                    <img src="/assets/img/sidebar-1.jpg" alt="">
+                </a>
+            </li>
+            <li>
+                <a class="img-holder switch-trigger" href="javascript:void(0)">
+                    <img src="/assets/img/sidebar-2.jpg" alt="">
+                </a>
+            </li>
+            <li>
+                <a class="img-holder switch-trigger" href="javascript:void(0)">
+                    <img src="/assets/img/sidebar-4.jpg" alt="">
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>-->
