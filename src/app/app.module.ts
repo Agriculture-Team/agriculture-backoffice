@@ -21,6 +21,7 @@ import { HomeComponent } from './components/home/home.component';
 import { HeaderComponent } from './components/partial/header/header.component';
 import { SidebarComponent } from './components/partial/sidebar/sidebar.component';
 import { FooterComponent } from './components/partial/footer/footer.component';
+import { ConfirmdialogComponent } from './components/confirmdialog/confirmdialog.component';
 
 import { AddcategoryComponent } from './modules/category/addcategory/addcategory.component';
 import { UpdatecategoryComponent } from './modules/category/updatecategory/updatecategory.component';
@@ -28,6 +29,7 @@ import { ListcategoryComponent } from './modules/category/listcategory/listcateg
 import { AdduserComponent } from './modules/user/adduser/adduser.component';
 import { UpdateuserComponent } from './modules/user/updateuser/updateuser.component';
 import { ListuserComponent } from './modules/user/listuser/listuser.component';
+
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { ListuserComponent } from './modules/user/listuser/listuser.component';
     HeaderComponent,
     SidebarComponent,
     FooterComponent,
+    ConfirmdialogComponent,
     AddcategoryComponent,
     UpdatecategoryComponent,
     ListcategoryComponent,
@@ -57,6 +60,7 @@ import { ListuserComponent } from './modules/user/listuser/listuser.component';
     SimpleNotificationsModule.forRoot(),
     BlockUIModule.forRoot()
   ],
+  entryComponents: [ConfirmdialogComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>
+    {{title}}
+  </h1>  
+  <div mat-dialog-content>
+    <p>{{message}}</p>
+  </div>  
+  <div mat-dialog-actions class="pull-right">
+    <button mat-button (click)="onDismiss()">{{btnCancel}}</button>
+    <button mat-raised-button color="primary" (click)="onConfirm()">{{btnOK}}</button>
+  </div>

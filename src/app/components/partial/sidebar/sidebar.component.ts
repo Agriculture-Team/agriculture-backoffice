@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConstantService } from 'src/app/service/helper/constant.service';
 import { Router, NavigationEnd } from '@angular/router';
-import * as $ from 'jquery';
 import { AuthenticationService } from 'src/app/service/authservice/authentication.service';
+import { ConfirmDialogModel, ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UiHelperService} from 'src/app/service/helper/uihelper.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,22 +14,23 @@ import { AuthenticationService } from 'src/app/service/authservice/authenticatio
 })
 export class SidebarComponent implements OnInit {
   isAuthenticated: boolean;
-  MenuList: any[]=[];
-  isMenuLoading:boolean;
+  MenuList: any[] = [];
+  isMenuLoading: boolean;
+  showMobilOption: boolean;
   constructor(private authService: AuthenticationService,
     private http: HttpClient,
     private constantService: ConstantService,
-    private router: Router) {
+    private router: Router,
+    public dialog: MatDialog,
+    private uiHelperService:UiHelperService) {
     this.isAuthenticated = authService.isAuthenticated;
+    this.showMobilOptions(screen.width);
     this.getMenuList();
 
     router.events.subscribe((val: any) => {
       const value = val instanceof NavigationEnd;
       if (value == true) {
-        let hasHtmlNavOpen = $('#bigboss').hasClass('nav-open');
-        if(hasHtmlNavOpen){
-          $('.close-layer').click();
-        }
+        this.uiHelperService.closeSideBar();
         this.setMenuClass();
       }
     });
@@ -67,6 +70,10 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  logOut() {
+    this.authService.logOut();
+  }
+
   setMenuClass() {
     for (let i = 0; i < this.MenuList.length; i++) {
       const currentMenu = this.MenuList[i] as any;
@@ -93,6 +100,36 @@ export class SidebarComponent implements OnInit {
         }
       }
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    event.target.innerWidth;
+    this.showMobilOptions(event.target.innerWidth);
+  }
+
+  showMobilOptions(size: number) {
+    if (size < 960) {
+      this.showMobilOption = true;
+    } else {
+      this.showMobilOption = false;
+    }
+  }
+
+  confirmLogout(): void {
+    this.uiHelperService.closeSideBar();
+    const message = 'Çıkış yapmak istediğinize emin misiniz?';
+    const dialogData = new ConfirmDialogModel("İşlemi Onayla", message, 'Hayır', 'Evet',true);
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      maxWidth: "600px",
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if (dialogResult && dialogResult == true) {
+        this.logOut();
+      }
+    });
   }
 
 }
