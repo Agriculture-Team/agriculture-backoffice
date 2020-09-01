@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import * as _ from 'lodash';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,8 +19,8 @@ export interface Category {
   isOnline: boolean;
   id: number;
   parentId: number;
-  description:string;
-  keyword:string;
+  description: string;
+  keyword: string;
 }
 
 @Component({
@@ -36,6 +38,8 @@ export class ListcategoryComponent implements OnInit {
   selection = new SelectionModel<Category>(true, []);
   loading: boolean;
 
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   constructor(private router: Router,
     private dialog: MatDialog,
     private notificationsService: NotificationsService,
@@ -57,8 +61,8 @@ export class ListcategoryComponent implements OnInit {
               pageSlug: mainCategory.pageSlug,
               title: mainCategory.title,
               parentId: mainCategory.parentId,
-              description:mainCategory.description,
-              keyword:mainCategory.keyword
+              description: mainCategory.description,
+              keyword: mainCategory.keyword
             }
             this.CategoryList.push(item);
             if (mainCategory.subCategory && mainCategory.subCategory.length > 0) {
@@ -72,8 +76,8 @@ export class ListcategoryComponent implements OnInit {
                     pageSlug: subCategory.pageSlug,
                     title: subCategory.title,
                     parentId: subCategory.parentId,
-                    description:subCategory.description,
-                    keyword:subCategory.keyword
+                    description: subCategory.description,
+                    keyword: subCategory.keyword
                   };
                   this.CategoryList.push(subItem);
                 }
@@ -83,6 +87,7 @@ export class ListcategoryComponent implements OnInit {
         }
         this.dataSource = new MatTableDataSource<Category>(this.CategoryList);
       }
+      this.setTableSpecs();
       this.blockUI.stop();
     }, error => {
       this.blockUI.stop();
@@ -90,6 +95,10 @@ export class ListcategoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
   addNew() {
@@ -222,8 +231,17 @@ export class ListcategoryComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Category>(this.CategoryList);
   }
 
-  navigateToUpdate(item:Category){
-    this.router.navigateByUrl('/kategoriler/guncelle',{ state: { data: JSON.stringify(item) } });
+  navigateToUpdate(item: Category) {
+    this.router.navigateByUrl('/kategoriler/guncelle', { state: { data: JSON.stringify(item) } });
+  }
+
+  public doFilter = (value: string) => {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  setTableSpecs(){
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
 }
