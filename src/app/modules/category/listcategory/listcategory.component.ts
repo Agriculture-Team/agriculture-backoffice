@@ -10,13 +10,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { CategoryService } from '../../../service/moduleservice/category.service';
 import { NotificationsService } from 'angular2-notifications';
 
-export interface PeriodicElement {
+export interface Category {
   name: string;
   title: string;
   pageSlug: string;
   isOnline: boolean;
   id: number;
   parentId: number;
+  description:string;
+  keyword:string;
 }
 
 @Component({
@@ -28,10 +30,10 @@ export class ListcategoryComponent implements OnInit {
   @BlockUI() blockUI: NgBlockUI;
   Title: string = 'Kategoriler';
   TitleIcon: string = 'library_books';
-  CategoryList: PeriodicElement[] = [];
+  CategoryList: Category[] = [];
   displayedColumns: string[] = ['name', 'title', 'pageSlug', 'isOnline', 'configuration'];
-  dataSource = new MatTableDataSource<PeriodicElement>(this.CategoryList);
-  selection = new SelectionModel<PeriodicElement>(true, []);
+  dataSource = new MatTableDataSource<Category>(this.CategoryList);
+  selection = new SelectionModel<Category>(true, []);
   loading: boolean;
 
   constructor(private router: Router,
@@ -48,26 +50,30 @@ export class ListcategoryComponent implements OnInit {
         for (var i = 0; i < response.length; i++) {
           var mainCategory = response[i];
           if (mainCategory) {
-            var item = <PeriodicElement>{
+            var item = <Category>{
               id: mainCategory.id,
               isOnline: mainCategory.isOnline,
               name: mainCategory.name,
               pageSlug: mainCategory.pageSlug,
               title: mainCategory.title,
-              parentId: mainCategory.parentId
+              parentId: mainCategory.parentId,
+              description:mainCategory.description,
+              keyword:mainCategory.keyword
             }
             this.CategoryList.push(item);
             if (mainCategory.subCategory && mainCategory.subCategory.length > 0) {
               for (var j = 0; j < mainCategory.subCategory.length; j++) {
                 var subCategory = mainCategory.subCategory[j];
                 if (subCategory) {
-                  var subItem = <PeriodicElement>{
+                  var subItem = <Category>{
                     id: subCategory.id,
                     isOnline: subCategory.isOnline,
                     name: subCategory.name,
                     pageSlug: subCategory.pageSlug,
                     title: subCategory.title,
-                    parentId: subCategory.parentId
+                    parentId: subCategory.parentId,
+                    description:subCategory.description,
+                    keyword:subCategory.keyword
                   };
                   this.CategoryList.push(subItem);
                 }
@@ -75,12 +81,11 @@ export class ListcategoryComponent implements OnInit {
             }
           }
         }
-        this.dataSource = new MatTableDataSource<PeriodicElement>(this.CategoryList);
+        this.dataSource = new MatTableDataSource<Category>(this.CategoryList);
       }
       this.blockUI.stop();
     }, error => {
       this.blockUI.stop();
-      console.error(error);
     });
   }
 
@@ -91,7 +96,7 @@ export class ListcategoryComponent implements OnInit {
     this.router.navigate(['/kategoriler/ekle']);
   }
 
-  changeConfirm(item: PeriodicElement): void {
+  changeConfirm(item: Category): void {
     if (item.parentId == 0) {
       const message = 'Ana kategori statüsündeki kategori durumu değiştirildiğinde tüm alt kategoriler etkilenir. Yine de durum değiştirilsin mi?';
       const dialogData = new ConfirmDialogModel("İşlemi Onayla", message, 'Hayır', 'Evet');
@@ -103,7 +108,7 @@ export class ListcategoryComponent implements OnInit {
         if (dialogResult && dialogResult == true) {
           this.change(item).then(() => {
             this.changeElement(item, item.isOnline);
-            var subElements = _.filter(this.CategoryList, (element: PeriodicElement) => { return element.parentId == item.id });
+            var subElements = _.filter(this.CategoryList, (element: Category) => { return element.parentId == item.id });
             if (subElements && subElements.length > 0) {
               for (var i = 0; i < subElements.length; i++) {
                 this.changeElement(subElements[i], item.isOnline);
@@ -119,7 +124,7 @@ export class ListcategoryComponent implements OnInit {
     }
   }
 
-  deleteConfirm(item: PeriodicElement): void {
+  deleteConfirm(item: Category): void {
     if (item.parentId == 0) {
       const message = 'Ana kategori statüsündeki kategori durumu silindiğinde tüm alt kategoriler ve bağlı ilanlar da silinir. Yine de silmek istediğinize emin misiniz?';
       const dialogData = new ConfirmDialogModel("İşlemi Onayla", message, 'Hayır', 'Evet');
@@ -131,7 +136,7 @@ export class ListcategoryComponent implements OnInit {
         if (dialogResult && dialogResult == true) {
           this.delete(item).then(() => {
             this.deleteElement(item);
-            var subElements = _.filter(this.CategoryList, (element: PeriodicElement) => { return element.parentId == item.id });
+            var subElements = _.filter(this.CategoryList, (element: Category) => { return element.parentId == item.id });
             if (subElements && subElements.length > 0) {
               for (var i = 0; i < subElements.length; i++) {
                 this.deleteElement(subElements[i]);
@@ -157,7 +162,7 @@ export class ListcategoryComponent implements OnInit {
     }
   }
 
-  change(item: PeriodicElement) {
+  change(item: Category) {
     let promise = new Promise((resolve, reject) => {
       var model = {
         Id: item.id,
@@ -180,7 +185,7 @@ export class ListcategoryComponent implements OnInit {
     return promise;
   }
 
-  delete(item: PeriodicElement) {
+  delete(item: Category) {
     let promise = new Promise((resolve, reject) => {
       var model = {
         Id: item.id
@@ -202,19 +207,23 @@ export class ListcategoryComponent implements OnInit {
     return promise;
   }
 
-  changeElement(item: PeriodicElement, newStatus: boolean) {
-    var index = _.findIndex(this.CategoryList, (element: PeriodicElement) => {
+  changeElement(item: Category, newStatus: boolean) {
+    var index = _.findIndex(this.CategoryList, (element: Category) => {
       return element.id == item.id
     })
     this.CategoryList[index].isOnline = newStatus;
-    this.dataSource = new MatTableDataSource<PeriodicElement>(this.CategoryList);
+    this.dataSource = new MatTableDataSource<Category>(this.CategoryList);
   }
 
-  deleteElement(item: PeriodicElement) {
-    _.remove(this.CategoryList, (element: PeriodicElement) => {
+  deleteElement(item: Category) {
+    _.remove(this.CategoryList, (element: Category) => {
       return element.id == item.id
     })
-    this.dataSource = new MatTableDataSource<PeriodicElement>(this.CategoryList);
+    this.dataSource = new MatTableDataSource<Category>(this.CategoryList);
+  }
+
+  navigateToUpdate(item:Category){
+    this.router.navigateByUrl('/kategoriler/guncelle',{ state: { data: JSON.stringify(item) } });
   }
 
 }

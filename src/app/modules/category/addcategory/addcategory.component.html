@@ -1,65 +1,79 @@
 <div class="content centerTop">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header card-header-primary card-header-icon">
-                        <div class="card-icon">
-                            <i class="material-icons">{{TitleIcon}}</i>
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header card-header-primary card-header-icon">
+                            <div class="card-icon">
+                                <i class="material-icons">{{TitleIcon}}</i>
+                            </div>
+                            <h4 class="card-title">{{Title}}</h4>
                         </div>
-                        <h4 class="card-title">{{Title}}</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <mat-label>Kategori Seçiniz</mat-label>
-                                    <mat-select [(value)]="selected">
-                                        <mat-option *ngFor="let item of CategoryList" [value]="item.value">
-                                            {{item.viewValue}}
-                                        </mat-option>
-                                    </mat-select>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating">Kategori Adı</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating">Sayfa Başlığı</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating"> Keyword</label>
-                                    <textarea class="form-control" rows="2"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating"> Description</label>
-                                    <textarea class="form-control" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn" (click)="back()"><span class="btn-label"><i class="material-icons">keyboard_arrow_left</i></span>Geri<div class="ripple-container"></div></button>
-                        <button type="submit" class="btn btn-info pull-right">{{SubmitButton}}</button>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card ">
-                    <div class="card-body">
-                        <h6 class="card-category">Ayarlar</h6>
+                        <div class="card-body">
 
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <mat-label>Kategori Seçiniz</mat-label>
+                                        <mat-select  formControlName="ParentId">
+                                            <mat-option *ngFor="let item of CategoryList" [value]="item.value">
+                                                {{item.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating" for="Name">Kategori Adı</label>
+                                        <input id="Name" matInput type="text" class="form-control"
+                                            formControlName="Name" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">Sayfa Başlığı</label>
+                                        <input type="text" class="form-control" formControlName="Title"
+                                            autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating"> Keyword</label>
+                                        <textarea class="form-control" rows="2" formControlName="Keyword"
+                                            autocomplete="off"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating"> Description</label>
+                                        <textarea class="form-control" rows="3" formControlName="Description"
+                                            autocomplete="off"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn" (click)="back()"><span class="btn-label"><i
+                                        class="material-icons">keyboard_arrow_left</i></span>Geri<div
+                                    class="ripple-container"></div></button>
+                            <button type="submit" class="btn btn-info pull-right">{{SubmitButton}}</button>
+                            <div class="clearfix"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-body">
+                            <h6 class="card-category">Ayarlar</h6>
+                            <div class="form-group">
+                                <label class="bmd-label-floating"> Yayın Durumu</label><br>
+                                <mat-slide-toggle formControlName="IsOnline"></mat-slide-toggle>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
