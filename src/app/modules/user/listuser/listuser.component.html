@@ -14,34 +14,34 @@
               <a (click)="addNew()" class="btn btn-info btn-round cursor tableOptionButton"><span
                   class="material-icons">playlist_add</span>Yeni</a>
             </div>
-            <div class="material-datatables" style="margin-top:5px">
+            <div class="table-responsive" style="margin-top:5px">
               <mat-form-field fxFlex="100%">
                 <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Ara..."
                   autocomplete="off">
               </mat-form-field>
-              <table mat-table [dataSource]="dataSource" matSort>
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort class="table">
                 <ng-container matColumnDef="name">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Adı Soyadı </th>
-                  <td mat-cell *matCellDef="let element">{{element.NameSurname}}</td>
+                  <td mat-cell *matCellDef="let element" class="text-nowrap">{{element.NameSurname}}</td>
                 </ng-container>
                 <ng-container matColumnDef="email">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> E-posta Adresi </th>
-                  <td mat-cell *matCellDef="let element"> {{element.Email}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.Email}} </td>
                 </ng-container>
                 <ng-container matColumnDef="phone">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Telefon Numarası </th>
-                  <td mat-cell *matCellDef="let element"> {{element.PhoneNumber}} </td>
+                  <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.PhoneNumber}} </td>
                 </ng-container>
                 <ng-container matColumnDef="isOnline">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Durum </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="text-nowrap">
                     <mat-slide-toggle [(ngModel)]="element.IsOnline" (ngModelChange)="changeConfirm(element)">
                     </mat-slide-toggle>
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="configuration">
                   <th mat-header-cell *matHeaderCellDef> </th>
-                  <td mat-cell *matCellDef="let element">
+                  <td mat-cell *matCellDef="let element" class="text-nowrap">
                     <a class="cursor" (click)="navigateToUpdate(element)">
                       <mat-icon>edit</mat-icon>
                     </a>
@@ -51,13 +51,9 @@
                   </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-                </tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
               </table>
-              <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50]">
-              </mat-paginator>
-
-
+              <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50]"></mat-paginator>
             </div>
           </div>
         </div>
