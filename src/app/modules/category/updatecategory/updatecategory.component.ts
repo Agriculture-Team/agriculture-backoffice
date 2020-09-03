@@ -44,8 +44,7 @@ export class UpdatecategoryComponent implements OnInit {
     private formBuilder: FormBuilder,
     private notificationService: NotificationsService,
     private uiHelpService: UiHelperService,
-    public activatedRoute: ActivatedRoute,
-    private constantService: ConstantService) {
+    public activatedRoute: ActivatedRoute) {
     this.loadForm();
     this.getCategoryList();
   }
@@ -126,7 +125,6 @@ export class UpdatecategoryComponent implements OnInit {
         }, 3500);
       }
     });
-
   }
 
   onSubmit(post) {

@@ -28,7 +28,8 @@
     "ng-block-ui": "^3.0.2",
     "rxjs": "^6.5.5",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.3"
+    "zone.js": "~0.10.3",
+    "angular2-text-mask": "9.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1000.1",

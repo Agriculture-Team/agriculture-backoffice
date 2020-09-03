@@ -1,27 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { ConfirmDialogModel, ConfirmdialogComponent } from 'src/app/components/confirmdialog/confirmdialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationsService } from 'angular2-notifications';
+import { UserService } from 'src/app/service/moduleservice/user.service';
+import { NgBlockUI, BlockUI } from 'ng-block-ui';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import * as _ from 'lodash';
+import { SelectionModel } from '@angular/cdk/collections';
 
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatTableDataSource} from '@angular/material/table';
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+export interface User {
+  NameSurname: string;
+  Email: string;
+  PhoneNumber: string;
+  IsOnline: boolean;
+  Id: number;
 }
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-];
 
 @Component({
   selector: 'app-listuser',
@@ -31,35 +27,149 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class ListuserComponent implements OnInit {
   Title: string = 'Kullanıcılar';
   TitleIcon: string = 'people';
-  constructor() { }
+  @BlockUI() blockUI: NgBlockUI;
+  UserList: User[] = [];
+  dataSource = new MatTableDataSource<User>(this.UserList);
+  selection = new SelectionModel<User>(true, []);
+  displayedColumns: string[] = ['name', 'email', 'phone', 'isOnline', 'configuration'];
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  constructor(private router: Router,
+    private dialog: MatDialog,
+    private notificationsService: NotificationsService,
+    private userService: UserService) { 
+      this.getUserList();
+    }
 
   ngOnInit(): void {
   }
 
-  displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-  selection = new SelectionModel<PeriodicElement>(true, []);
+  ngAfterViewInit(): void {
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+  getUserList() {
+    this.blockUI.start();
+    this.userService.list().subscribe((response: any[]) => {
+      if (response && response.length > 0) {
+        for (var i = 0; i < response.length; i++) {
+          var user = response[i];
+          if (user) {
+            var item = <User>{
+              Email: user.email,
+              Id: user.id,
+              IsOnline: user.isOnline,
+              NameSurname: user.nameSurname,
+              PhoneNumber: user.phoneNumber
+            }
+            this.UserList.push(item);
+          }
+        }
+        this.dataSource = new MatTableDataSource<User>(this.UserList);
+      }
+      this.setTableSpecs();
+      this.blockUI.stop();
+    }, error => {
+      this.blockUI.stop();
+    });
   }
 
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: PeriodicElement): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  addNew() {
+    this.router.navigate(['/kullanicilar/ekle']);
+  }
+
+  changeConfirm(item: any): void {
+    this.change(item);
+  }
+
+  deleteConfirm(item: User): void {
+    const message = item.NameSurname + ' isimli kullanıcıyı silmek istediğinize emin misiniz?';
+    const dialogData = new ConfirmDialogModel("İşlemi Onayla", message, 'Hayır', 'Evet');
+    const dialogRef = this.dialog.open(ConfirmdialogComponent, {
+      maxWidth: "600px",
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if (dialogResult && dialogResult == true) {
+        this.delete(item).then(() => {
+          this.deleteElement(item);
+        });
+      }
+    });
+
+  }
+
+  change(item: User) {
+    let promise = new Promise((resolve, reject) => {
+      var model = {
+        Id: item.Id,
+        IsOnline: item.IsOnline
+      };
+      this.blockUI.start();
+      this.userService.change(model).subscribe((response: any) => {
+        this.blockUI.stop();
+        if (response && response.status == true) {
+          this.notificationsService.success('İşlem Başarılı', response.message);
+        } else {
+          this.notificationsService.error('İşlem Hatalı', response.message);
+        }
+        resolve();
+      }, error => {
+        this.blockUI.stop();
+        resolve();
+      })
+    });
+    return promise;
+  }
+
+  delete(item: User) {
+    let promise = new Promise((resolve, reject) => {
+      var model = {
+        Id: item.Id
+      };
+      this.blockUI.start();
+      this.userService.delete(model).subscribe((response: any) => {
+        this.blockUI.stop();
+        if (response && response.status == true) {
+          this.notificationsService.success('İşlem Başarılı', response.message);
+        } else {
+          this.notificationsService.error('İşlem Hatalı', response.message);
+        }
+        resolve();
+      }, error => {
+        this.blockUI.stop();
+        resolve();
+      })
+    });
+    return promise;
+  }
+
+  changeElement(item: User, newStatus: boolean) {
+    var index = _.findIndex(this.UserList, (element: User) => {
+      return element.Id == item.Id
+    })
+    this.UserList[index].IsOnline = newStatus;
+    this.dataSource = new MatTableDataSource<User>(this.UserList);
+  }
+
+  deleteElement(item: User) {
+    _.remove(this.UserList, (element: User) => {
+      return element.Id == item.Id
+    })
+    this.dataSource = new MatTableDataSource<User>(this.UserList);
+  }
+
+  navigateToUpdate(item: User) {
+    this.router.navigateByUrl('/kullanicilar/guncelle', { state: { data: JSON.stringify(item) } });
+  }
+
+  public doFilter = (value: string) => {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  setTableSpecs() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
   }
 
 }

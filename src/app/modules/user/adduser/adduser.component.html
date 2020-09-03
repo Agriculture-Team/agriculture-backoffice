@@ -1,1 +1,70 @@
-<p>adduser works!</p>
+<div class="content centerTop">
+    <div class="container-fluid">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header card-header-primary card-header-icon">
+                            <div class="card-icon">
+                                <i class="material-icons">{{TitleIcon}}</i>
+                            </div>
+                            <h4 class="card-title">{{Title}}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating" for="name">Adı Soyadı</label>
+                                        <input id="name" type="text" class="form-control" formControlName="NameSurname" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating" for="email">E-Posta Adresi</label>
+                                        <input id="email" type="email" class="form-control" formControlName="Email" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating" for="phone"> Telefon Numarası</label>
+                                        <input id="phone" [textMask]="{mask: phoneMask}" type="text" class="form-control" formControlName="PhoneNumber" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating" for="phone"> Şifre</label>
+                                        <input id="phone" type="password" class="form-control" formControlName="Password" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating" for="repassword"> Şifre Tekrar</label>
+                                        <input id="repassword" type="password" class="form-control" formControlName="RePassword" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn" (click)="back()"><span class="btn-label"><i
+                                        class="material-icons">keyboard_arrow_left</i></span>Geri<div
+                                    class="ripple-container"></div></button>
+                            <button type="submit" class="btn btn-info pull-right">{{SubmitButton}}</button>
+                            <div class="clearfix"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card ">
+                        <div class="card-body">
+                            <h6 class="card-category">Ayarlar</h6>
+                            <div class="form-group">
+                                <label class="bmd-label-floating"> Aktiflik Durumu</label><br>
+                                <mat-slide-toggle formControlName="IsOnline"></mat-slide-toggle>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

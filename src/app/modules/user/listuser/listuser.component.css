@@ -1,6 +1,26 @@
-table {
-    width: 100%;
+.mat-table {
+  width: 100%;
+}
+
+.material-datatables{
+  margin-top:30px;
+}
+
+
+@media(max-width: 450px) {
+  .mobile-label {
+    width: 80px;
+    display: inline-block;
+        font-weight: bold;
   }
-  .material-datatables{
-    margin-top:30px;
+
+  .mat-header-row {
+    display: none;
   }
+
+  .mat-row { 
+    flex-direction: column;
+    align-items: start;
+    padding: 8px 24px;
+  }
+}

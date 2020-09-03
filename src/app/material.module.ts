@@ -63,7 +63,7 @@ import { MatStepperModule } from '@angular/material/stepper';
         MatTabsModule,
         MatToolbarModule,
         MatTooltipModule,
-        MatStepperModule,
+        MatStepperModule
     ],
     exports: [
         MatAutocompleteModule,

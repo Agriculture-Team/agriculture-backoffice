@@ -15,6 +15,7 @@ import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
 import { BlockUIModule } from 'ng-block-ui';
+import { TextMaskModule } from 'angular2-text-mask';
 
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
@@ -58,7 +59,8 @@ import { ListuserComponent } from './modules/user/listuser/listuser.component';
     FormsModule,
     MaterialModule,
     SimpleNotificationsModule.forRoot(),
-    BlockUIModule.forRoot()
+    BlockUIModule.forRoot(),
+    TextMaskModule
   ],
   entryComponents: [ConfirmdialogComponent],
   providers: [
