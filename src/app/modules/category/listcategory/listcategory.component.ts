@@ -49,10 +49,11 @@ export class ListcategoryComponent implements OnInit {
 
   getCategoryList() {
     this.blockUI.start();
-    this.categoryService.list().subscribe((response: any[]) => {
-      if (response && response.length > 0) {
-        for (var i = 0; i < response.length; i++) {
-          var mainCategory = response[i];
+    this.categoryService.list().subscribe((response: any) => {
+      var list = response.data;
+      if (list && list.length > 0) {
+        for (var i = 0; i < list.length; i++) {
+          var mainCategory = list[i];
           if (mainCategory) {
             var item = <Category>{
               id: mainCategory.id,
@@ -106,7 +107,7 @@ export class ListcategoryComponent implements OnInit {
   }
 
   changeConfirm(item: Category): void {
-    if (item.parentId == 0) {
+    if (item.parentId == 0 && item.isOnline==false) {
       const message = 'Ana kategori statüsündeki kategori durumu değiştirildiğinde tüm alt kategoriler etkilenir. Yine de durum değiştirilsin mi?';
       const dialogData = new ConfirmDialogModel("İşlemi Onayla", message, 'Hayır', 'Evet');
       const dialogRef = this.dialog.open(ConfirmdialogComponent, {
@@ -173,17 +174,13 @@ export class ListcategoryComponent implements OnInit {
 
   change(item: Category) {
     let promise = new Promise((resolve, reject) => {
-      var model = {
-        Id: item.id,
-        IsOnline: item.isOnline
-      };
       this.blockUI.start();
-      this.categoryService.change(model).subscribe((response: any) => {
+      this.categoryService.change(item).subscribe((response: any) => {
         this.blockUI.stop();
-        if (response && response.status == true) {
-          this.notificationsService.success('İşlem Başarılı', response.message);
+        if (response && response.isSuccess == true) {
+          this.notificationsService.success('İşlem Başarılı', response.serviceMessage);
         } else {
-          this.notificationsService.error('İşlem Hatalı', response.message);
+          this.notificationsService.error('İşlem Hatalı', response.serviceMessage);
         }
         resolve();
       }, error => {
@@ -196,16 +193,13 @@ export class ListcategoryComponent implements OnInit {
 
   delete(item: Category) {
     let promise = new Promise((resolve, reject) => {
-      var model = {
-        Id: item.id
-      };
       this.blockUI.start();
-      this.categoryService.delete(model).subscribe((response: any) => {
+      this.categoryService.delete(item.id).subscribe((response: any) => {
         this.blockUI.stop();
-        if (response && response.status == true) {
-          this.notificationsService.success('İşlem Başarılı', response.message);
+        if (response && response.isSuccess == true) {
+          this.notificationsService.success('İşlem Başarılı', response.serviceMessage);
         } else {
-          this.notificationsService.error('İşlem Hatalı', response.message);
+          this.notificationsService.error('İşlem Hatalı', response.serviceMessage);
         }
         resolve();
       }, error => {
@@ -217,11 +211,14 @@ export class ListcategoryComponent implements OnInit {
   }
 
   changeElement(item: Category, newStatus: boolean) {
-    var index = _.findIndex(this.CategoryList, (element: Category) => {
-      return element.id == item.id
-    })
-    this.CategoryList[index].isOnline = newStatus;
-    this.dataSource = new MatTableDataSource<Category>(this.CategoryList);
+    if(newStatus==false){
+      var index = _.findIndex(this.CategoryList, (element: Category) => {
+        return element.id == item.id
+      })
+      this.CategoryList[index].isOnline = newStatus;
+      this.dataSource = new MatTableDataSource<Category>(this.CategoryList);
+      this.setTableSpecs();
+    }
   }
 
   deleteElement(item: Category) {
@@ -229,6 +226,7 @@ export class ListcategoryComponent implements OnInit {
       return element.id == item.id
     })
     this.dataSource = new MatTableDataSource<Category>(this.CategoryList);
+    this.setTableSpecs();
   }
 
   navigateToUpdate(item: Category) {

@@ -37,9 +37,9 @@ export class ListuserComponent implements OnInit {
   constructor(private router: Router,
     private dialog: MatDialog,
     private notificationsService: NotificationsService,
-    private userService: UserService) { 
-      this.getUserList();
-    }
+    private userService: UserService) {
+    this.getUserList();
+  }
 
   ngOnInit(): void {
   }
@@ -101,12 +101,8 @@ export class ListuserComponent implements OnInit {
 
   change(item: User) {
     let promise = new Promise((resolve, reject) => {
-      var model = {
-        Id: item.Id,
-        IsOnline: item.IsOnline
-      };
       this.blockUI.start();
-      this.userService.change(model).subscribe((response: any) => {
+      this.userService.change(item).subscribe((response: any) => {
         this.blockUI.stop();
         if (response && response.status == true) {
           this.notificationsService.success('İşlem Başarılı', response.message);
@@ -124,11 +120,8 @@ export class ListuserComponent implements OnInit {
 
   delete(item: User) {
     let promise = new Promise((resolve, reject) => {
-      var model = {
-        Id: item.Id
-      };
       this.blockUI.start();
-      this.userService.delete(model).subscribe((response: any) => {
+      this.userService.delete(item.Id).subscribe((response: any) => {
         this.blockUI.stop();
         if (response && response.status == true) {
           this.notificationsService.success('İşlem Başarılı', response.message);
@@ -168,8 +161,10 @@ export class ListuserComponent implements OnInit {
   }
 
   setTableSpecs() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    setTimeout(() => {
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    }, 500);
   }
 
 }

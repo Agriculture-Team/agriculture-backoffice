@@ -15,7 +15,7 @@ export class UserService {
         private notificationService: NotificationsService) { }
 
     list() {
-        return this.http.get(this.constantService.apiUrl + '/user/getlist').pipe(map((response) => {
+        return this.http.get(this.constantService.apiUrl + '/user').pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);
@@ -43,7 +43,7 @@ export class UserService {
     }
 
     save(model: any) {
-        return this.http.post(this.constantService.apiUrl + '/user/save', model).pipe(map((response) => {
+        return this.http.post(this.constantService.apiUrl + '/user', model).pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);
@@ -57,7 +57,7 @@ export class UserService {
     }
 
     update(model: any) {
-        return this.http.post(this.constantService.apiUrl + '/user/update', model).pipe(map((response) => {
+        return this.http.put(this.constantService.apiUrl + '/user/'+model.Id, model).pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);
@@ -71,7 +71,7 @@ export class UserService {
     }
 
     change(model: any) {
-        return this.http.post(this.constantService.apiUrl + '/user/change', model).pipe(map((response) => {
+        return this.http.put(this.constantService.apiUrl + '/user/'+model.Id, model).pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);
@@ -85,7 +85,7 @@ export class UserService {
     }
 
     delete(model: any) {
-        return this.http.post(this.constantService.apiUrl + '/user/delete', model).pipe(map((response) => {
+        return this.http.delete(this.constantService.apiUrl + '/user/'+ model).pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);

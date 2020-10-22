@@ -43,7 +43,7 @@ export class CategoryService {
     }
 
     save(model: any) {
-        return this.http.post(this.constantService.apiUrl + '/category/save', model).pipe(map((response) => {
+        return this.http.post(this.constantService.apiUrl + '/category', model).pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);
@@ -57,7 +57,7 @@ export class CategoryService {
     }
 
     update(model: any) {
-        return this.http.post(this.constantService.apiUrl + '/category/update', model).pipe(map((response) => {
+        return this.http.put(this.constantService.apiUrl + '/category/'+model.id, model).pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);
@@ -71,7 +71,7 @@ export class CategoryService {
     }
 
     change(model: any) {
-        return this.http.post(this.constantService.apiUrl + '/category/change', model).pipe(map((response) => {
+        return this.http.put(this.constantService.apiUrl + '/category/'+model.id, model).pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);
@@ -85,7 +85,7 @@ export class CategoryService {
     }
 
     delete(model: any) {
-        return this.http.post(this.constantService.apiUrl + '/category/delete', model).pipe(map((response) => {
+        return this.http.delete(this.constantService.apiUrl + '/category/'+model).pipe(map((response) => {
             return response;
         }), catchError((error, caught) => {
             this.notificationService.warn('Dikkat!', error);

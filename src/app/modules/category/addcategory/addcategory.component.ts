@@ -44,10 +44,11 @@ export class AddcategoryComponent implements OnInit {
     this.blockUI.start();
     this.CategoryList = [];
     this.CategoryList.push({ value: '', viewValue: 'Seçiniz' });
-    this.categoryService.list().subscribe((response: any[]) => {
-      if (response && response.length > 0) {
-        for (var i = 0; i < response.length; i++) {
-          var current = response[i];
+    this.categoryService.list().subscribe((response: any) => {
+      var list = response.data;
+      if (list && list.length > 0) {
+        for (var i = 0; i < list.length; i++) {
+          var current = list[i];
           if (current && current.id && current.name) {
             this.CategoryList.push({ value: current.id, viewValue: current.name })
           }
@@ -99,14 +100,14 @@ export class AddcategoryComponent implements OnInit {
       }
       this.blockUI.start();
       this.categoryService.save(post).subscribe((response: any) => {
-        if (response && response.status == true) {
-          this.notificationService.success('İşlem Başarılı', response.message);
+        if (response && response.isSuccess == true) {
+          this.notificationService.success('İşlem Başarılı', response.serviceMessage);
           this.loadDefaultValues();
           if (post.ParentId == 0) {
             this.getCategoryList();
           }
         } else {
-          this.notificationService.error('İşlem Hatalı', response.message);
+          this.notificationService.error('İşlem Hatalı', response.serviceMessage);
         }
         this.blockUI.stop();
       }, error => {

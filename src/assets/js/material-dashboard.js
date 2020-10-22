@@ -1,20 +1,3 @@
-/*!
-
- =========================================================
- * Material Dashboard - v2.1.2
- =========================================================
-
- * Product Page: https://www.creative-tim.com/product/material-dashboard
- * Copyright 2020 Creative Tim (http://www.creative-tim.com)
-
- * Designed by www.invisionapp.com Coded by www.creative-tim.com
-
- =========================================================
-
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
- */
-
 (function() {
   isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
 
@@ -82,6 +65,10 @@ $(document).ready(function() {
       $(this).closest('div').removeClass('has-error');
     }
   });
+
+  setTimeout(function() {
+    md.initDashboardPageCharts();
+  }, 500);
 
 });
 
@@ -214,7 +201,6 @@ md = {
     }
   },
 
-
   initFormExtendedDatetimepickers: function() {
     $('.datetimepicker').datetimepicker({
       icons: {
@@ -263,7 +249,6 @@ md = {
     });
   },
 
-
   initSliders: function() {
     // Sliders for demo purpose
     var slider = document.getElementById('sliderRegular');
@@ -308,17 +293,13 @@ md = {
   },
 
   initDashboardPageCharts: function() {
-
     if ($('#dailySalesChart').length != 0 || $('#completedTasksChart').length != 0 || $('#websiteViewsChart').length != 0) {
-      /* ----------==========     Daily Sales Chart initialization    ==========---------- */
-
       dataDailySalesChart = {
         labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
         series: [
           [12, 17, 7, 17, 23, 18, 38]
         ]
       };
-
       optionsDailySalesChart = {
         lineSmooth: Chartist.Interpolation.cardinal({
           tension: 0
@@ -332,22 +313,14 @@ md = {
           left: 0
         },
       }
-
       var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
-
       md.startAnimationForLineChart(dailySalesChart);
-
-
-
-      /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
-
       dataCompletedTasksChart = {
         labels: ['12p', '3p', '6p', '9p', '12p', '3a', '6a', '9a'],
         series: [
           [230, 750, 450, 300, 280, 240, 200, 190]
         ]
       };
-
       optionsCompletedTasksChart = {
         lineSmooth: Chartist.Interpolation.cardinal({
           tension: 0
@@ -363,13 +336,7 @@ md = {
       }
 
       var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
-
-      // start animation for the Completed Tasks Chart - Line Chart
       md.startAnimationForLineChart(completedTasksChart);
-
-
-      /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
-
       var dataWebsiteViewsChart = {
         labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
         series: [
@@ -401,8 +368,6 @@ md = {
         }]
       ];
       var websiteViewsChart = Chartist.Bar('#websiteViewsChart', dataWebsiteViewsChart, optionsWebsiteViewsChart, responsiveOptions);
-
-      //start animation for the Emails Subscription Chart
       md.startAnimationForBarChart(websiteViewsChart);
     }
   },

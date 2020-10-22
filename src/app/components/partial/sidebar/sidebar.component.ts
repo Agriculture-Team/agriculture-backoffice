@@ -5,7 +5,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { AuthenticationService } from 'src/app/service/authservice/authentication.service';
 import { ConfirmDialogModel, ConfirmdialogComponent } from '../../confirmdialog/confirmdialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { UiHelperService} from 'src/app/service/helper/uihelper.service';
+import { UiHelperService } from 'src/app/service/helper/uihelper.service';
+import { DashboardService } from 'src/app/service/moduleservice/dashboard.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,11 +19,10 @@ export class SidebarComponent implements OnInit {
   isMenuLoading: boolean;
   showMobilOption: boolean;
   constructor(private authService: AuthenticationService,
-    private http: HttpClient,
-    private constantService: ConstantService,
     private router: Router,
     public dialog: MatDialog,
-    private uiHelperService:UiHelperService) {
+    private uiHelperService: UiHelperService,
+    private dashBoardService: DashboardService) {
     this.isAuthenticated = authService.isAuthenticated;
     this.showMobilOptions(screen.width);
     this.getMenuList();
@@ -44,7 +44,7 @@ export class SidebarComponent implements OnInit {
       "SecureKey": this.authService.getLocalStorage('SecureKey')
     }
     this.isMenuLoading = true;
-    this.http.post(this.constantService.apiUrl + '/staticdata/getmenulist', request).subscribe((response: any[]) => {
+    this.dashBoardService.getMenuList(request).subscribe((response: any[]) => {
       this.isMenuLoading = false;
       if (response && response.length > 0) {
         for (var i = 0; i < response.length; i++) {
@@ -119,7 +119,7 @@ export class SidebarComponent implements OnInit {
   confirmLogout(): void {
     this.uiHelperService.closeSideBar();
     const message = 'Çıkış yapmak istediğinize emin misiniz?';
-    const dialogData = new ConfirmDialogModel("İşlemi Onayla", message, 'Hayır', 'Evet',true);
+    const dialogData = new ConfirmDialogModel("İşlemi Onayla", message, 'Hayır', 'Evet', true);
     const dialogRef = this.dialog.open(ConfirmdialogComponent, {
       maxWidth: "600px",
       data: dialogData
